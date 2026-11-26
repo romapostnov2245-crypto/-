@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>МОРОЗОВКА</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0c1b33">
+<style>
+:root{--ice:#bfe6ff;--night:#0c1b33;--ember:#ff5a2a;--gold:#ffd27a;--text:#f2f8ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#050b16;color:var(--text);font-family:"Trebuchet MS",Verdana,sans-serif;overflow:hidden}
+#app{position:relative;width:100%;height:100%;max-height:100vh;overflow:hidden;background:var(--night)}
+.scr{position:absolute;inset:0;display:none}
+.scr.on{display:block}
+#s1{background:#0a0f18;display:none;align-items:center;justify-content:center}
+#s1.on{display:flex}
+.logo{display:flex;align-items:center;gap:14px}
+.logo svg{width:84px;height:84px}
+.logo b{display:block;font-size:34px;letter-spacing:2px;line-height:1;font-weight:900}
+.logo .a{color:#7fd0ff}.logo .b{color:#c9d3df}
+.bg{position:absolute;inset:0;width:100%;height:100%}
+.snow{position:absolute;inset:0;pointer-events:none}
+.snow i{position:absolute;top:-10px;width:6px;height:6px;border-radius:50%;background:#fff;opacity:.85;animation:fall linear infinite}
+@keyframes fall{to{transform:translate(30px,110vh)}}
+.tw{animation:tw 1.6s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.35}to{opacity:1}}
+.ver{position:absolute;left:12px;bottom:8px;font-size:11px;opacity:.7}
+.load{position:absolute;left:5%;right:5%;bottom:22px}
+.load p{margin:0 0 8px 6%;font-size:14px;opacity:.9}
+.bar{height:5px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:var(--ember);transition:width .25s}
+.center-logo{position:absolute;left:50%;top:58%;transform:translateX(-50%)}
+.top{position:absolute;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.top .ic{display:flex;gap:12px}
+.ic span{width:34px;height:34px;border-radius:50%;background:rgba(10,20,40,.55);display:grid;place-items:center;font-size:16px}
+.panel{position:absolute;left:4%;top:24%;width:min(300px,44%)}
+.panel h3{margin:0 0 10px;font-size:18px}
+.nick{padding:12px 14px;border-radius:12px;background:rgba(235,245,255,.22);border:1px solid rgba(255,255,255,.4);font-size:18px;backdrop-filter:blur(4px)}
+.btns{display:flex;gap:8px;margin-top:10px}
+.btns button{flex:1;padding:10px 6px;border-radius:10px;border:1px solid;font-size:14px;color:#dff;background:rgba(10,30,50,.5)}
+.btns .c{border-color:#3ddc97;color:#6dffb8}.btns .l{border-color:#4aa8ff;color:#8cc8ff}
+.info{position:absolute;right:5%;top:22%;text-align:left;min-width:180px}
+.lvl{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700}
+.lvl b{border:2px solid #3ddc97;background:rgba(40,120,80,.5);border-radius:8px;padding:2px 12px;font-size:24px}
+.info div.s{margin-top:10px;font-size:15px;opacity:.95}
+.info em{font-style:normal;color:#ff8aa0;font-weight:700}
+.play{position:absolute;right:5%;bottom:7%;width:min(300px,34%);padding:16px;border-radius:14px;border:2px solid #ff9a73;background:linear-gradient(#ff5a2a,#d6340d);color:#fff;font-size:22px;font-weight:900;letter-spacing:1px;box-shadow:0 0 22px rgba(255,90,42,.55);cursor:pointer}
+.srv{position:absolute;left:4%;bottom:7%;display:flex;align-items:center;gap:12px}
+.srv small{display:block;font-size:12px;opacity:.7}
+.srv strong{font-size:22px;font-style:italic;letter-spacing:1px}
+.srv button{width:42px;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.4);background:rgba(10,20,40,.5);color:#fff;font-size:18px}
+.uid{position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:11px;opacity:.85;font-weight:700}
+.toast{position:absolute;left:50%;bottom:20%;transform:translateX(-50%);background:rgba(10,20,40,.85);padding:12px 18px;border-radius:12px;display:none;font-size:14px}
+@media(max-width:700px){.panel{width:46%;top:22%}.info{right:3%}.lvl{font-size:14px}.lvl b{font-size:18px}.play{font-size:17px;width:38%}.logo b{font-size:24px}}
+.modal{position:fixed;inset:0;background:rgba(3,8,18,.7);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
+.modal.on{display:flex}
+.box{width:min(380px,100%);max-height:90%;overflow:auto;background:#12243f;border:1px solid #3b6ea5;border-radius:16px;padding:18px}
+.box h4{margin:0 0 12px;font-size:19px}
+.box input[type=text]{width:100%;padding:12px;border-radius:10px;border:1px solid #4a77a8;background:#0b1830;color:#fff;font-size:16px}
+.box .row{display:flex;gap:8px;margin-top:14px}
+.box button{flex:1;padding:12px;border-radius:10px;border:0;font-size:15px;font-weight:700;color:#fff;background:#2b4a72}
+.box button.ok{background:#d6340d}
+.item{display:flex;justify-content:space-between;align-items:center;padding:12px;margin-bottom:8px;border-radius:10px;background:#0b1830;border:1px solid #2b4a72;cursor:pointer}
+.item.sel{border-color:#3ddc97}.item small{opacity:.7}
+.err{color:#ff8aa0;font-size:13px;margin-top:8px;min-height:16px}
+.chk{display:flex;justify-content:space-between;padding:10px 0;font-size:16px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div class="scr on" id="s1">
+  <div class="logo">
+    <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#0e2a4a" stroke="#bfe6ff" stroke-width="4"/><g stroke="#bfe6ff" stroke-width="5" stroke-linecap="round"><path d="M50 16v68M21 33l58 34M21 67l58-34"/></g><circle cx="50" cy="50" r="7" fill="#ff5a2a"/></svg>
+    <div><b class="a">МОРОЗОВКА</b><b class="b" style="font-size:16px;letter-spacing:6px;margin-top:6px">ONLINE</b></div>
+  </div>
+  <div class="ver">v 1.0.0</div>
+</div>
+
+<div class="scr" id="s2">
+  <svg class="bg" viewBox="0 0 1000 450" preserveAspectRatio="xMidYMid slice" id="scene2"></svg>
+  <div class="snow"></div>
+  <div class="center-logo logo"><svg viewBox="0 0 100 100" style="width:56px;height:56px"><circle cx="50" cy="50" r="44" fill="#0e2a4a" stroke="#fff" stroke-width="4"/><g stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M50 16v68M21 33l58 34M21 67l58-34"/></g><circle cx="50" cy="50" r="7" fill="#ff5a2a"/></svg><div><b style="font-size:24px;color:#ff6a3c">МОРОЗ</b><b style="font-size:24px">ОВКА</b></div></div>
+  <div class="load"><p id="lt">Подключение к серверу…</p><div class="bar"><span id="pb"></span></div></div>
+  <div class="ver">v 1.0.0</div>
+</div>
+
+<div class="scr" id="s3">
+  <svg class="bg" viewBox="0 0 1000 450" preserveAspectRatio="xMidYMid slice" id="scene3"></svg>
+  <div class="snow"></div>
+  <div class="top"><div class="ic"><span id="bTg">✈</span><span id="bVk">В</span></div><div class="uid" id="uid"></div><div class="ic"><span id="bHelp">🎧</span><span id="bSet">⚙</span><span id="bOut">⎋</span></div></div>
+  <div class="panel"><h3>Выбор персонажа</h3><div class="nick" id="nick" style="cursor:pointer"></div>
+    <div class="btns"><button class="c" id="bCreate">+ Создать</button><button class="l" id="bLink">🔗 Привязать</button></div></div>
+  <div class="info"><div class="lvl"><b id="lvl">1</b> УРОВЕНЬ</div><div class="s">Семья<br><em id="fam">—</em></div><div class="s">Наличные<br><b id="cash">0 ₽</b></div></div>
+  <div class="srv"><div><small>Сервер</small><strong id="srvName"></strong></div><button id="sw">⇄</button></div>
+  <button class="play" id="play">ИГРАТЬ</button>
+  <div class="toast" id="toast">Заходим на сервер…</div>
+  <div class="ver">v 1.0.0</div>
+</div>
+</div>
+
+<div class="modal" id="modal"><div class="box" id="box"></div></div>
+<script>
+(function(){
+var NS='http://www.w3.org/2000/svg';
+function person(x,y,s,coat,hat,scarf,skin){
+  return '<g transform="translate('+x+','+y+') scale('+s+')">'+
+  '<ellipse cx="0" cy="0" rx="22" ry="5" fill="rgba(0,0,0,.25)"/>'+
+  '<rect x="-12" y="-38" width="9" height="38" rx="3" fill="#222a3a"/><rect x="3" y="-38" width="9" height="38" rx="3" fill="#222a3a"/>'+
+  '<rect x="-14" y="-4" width="12" height="6" rx="2" fill="#111"/><rect x="2" y="-4" width="12" height="6" rx="2" fill="#111"/>'+
+  '<rect x="-17" y="-92" width="34" height="58" rx="10" fill="'+coat+'"/>'+
+  '<rect x="-24" y="-88" width="9" height="40" rx="4" fill="'+coat+'"/><rect x="15" y="-88" width="9" height="40" rx="4" fill="'+coat+'"/>'+
+  '<circle cx="-20" cy="-46" r="5" fill="#8a3b2b"/><circle cx="20" cy="-46" r="5" fill="#8a3b2b"/>'+
+  '<rect x="-15" y="-98" width="30" height="9" rx="4" fill="'+scarf+'"/>'+
+  '<circle cx="0" cy="-112" r="14" fill="'+skin+'"/>'+
+  '<path d="M-15 -114a15 15 0 0 1 30 0z" fill="'+hat+'"/><rect x="-16" y="-116" width="32" height="6" rx="3" fill="#f4f7fb"/><circle cx="0" cy="-130" r="5" fill="#f4f7fb"/>'+
+  '</g>';
+}
+function tree(x,y,s){
+  var lights='',cols=['#ff4d4d','#ffd27a','#6ad1ff','#7dff9a'];
+  var pts=[[-38,-70],[30,-85],[-20,-130],[40,-140],[-8,-180],[0,-215],[-55,-40],[58,-45],[10,-105],[-30,-160]];
+  pts.forEach(function(p,i){lights+='<circle class="tw" style="animation-delay:'+(i*0.23)+'s" cx="'+p[0]+'" cy="'+p[1]+'" r="4.5" fill="'+cols[i%4]+'"/>';});
+  return '<g transform="translate('+x+','+y+') scale('+s+')"><rect x="-9" y="-20" width="18" height="24" fill="#5b3a22"/>'+
+  '<path d="M0 -240L-34 -170H-18L-52 -110H-30L-70 -40H70L30 -110H52L18 -170H34Z" fill="#1f5a3c"/>'+
+  '<path d="M0 -240L-20 -180L0 -170L20 -180Z" fill="#2c7a52"/>'+
+  '<path d="M-60 -50Q-20 -30 60 -50M-38 -118Q0 -100 42 -118M-24 -170Q0 -156 24 -170" stroke="#f4f7fb" stroke-width="3" fill="none"/>'+
+  lights+'<path d="M0 -250l5 10h11l-9 7 4 11-11-7-11 7 4-11-9-7h11z" fill="#ffd27a"/>'+
+  '<rect x="-50" y="2" width="30" height="22" fill="#c0392b"/><rect x="-36" y="2" width="3" height="22" fill="#ffd27a"/>'+
+  '<rect x="24" y="4" width="24" height="18" fill="#2e86c1"/></g>';
+}
+function house(x,y,w,h,c){
+  return '<g transform="translate('+x+','+y+')"><rect x="0" y="'+(-h)+'" width="'+w+'" height="'+h+'" fill="'+c+'"/>'+
+  '<path d="M-8 '+(-h)+'L'+(w/2)+' '+(-h-36)+'L'+(w+8)+' '+(-h)+'Z" fill="#eef5fb"/>'+
+  '<rect x="'+(w*.2)+'" y="'+(-h*.6)+'" width="'+(w*.22)+'" height="'+(h*.25)+'" fill="#ffd27a"/><rect x="'+(w*.58)+'" y="'+(-h*.6)+'" width="'+(w*.22)+'" height="'+(h*.25)+'" fill="#ffd27a"/></g>';
+}
+function scene(withChar){
+  var s='<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1b33"/><stop offset=".6" stop-color="#3a5f8f"/><stop offset="1" stop-color="#a9c9e6"/></linearGradient></defs>'+
+  '<rect width="1000" height="450" fill="url(#sk)"/><circle cx="820" cy="70" r="34" fill="#f6f1d8" opacity=".9"/>';
+  for(var i=0;i<40;i++){s+='<circle cx="'+((i*97)%1000)+'" cy="'+((i*53)%200)+'" r="1.4" fill="#fff" opacity=".8"/>';}
+  s+='<path d="M0 270Q150 200 300 255T600 240T1000 250V450H0Z" fill="#7f9ec0"/>';
+  s+=house(60,300,110,70,'#6b4a3a')+house(190,305,90,60,'#7a5a46')+house(760,300,120,75,'#5e4436')+house(900,306,90,60,'#7a5a46');
+  s+='<rect y="300" width="1000" height="150" fill="#e9f2fa"/><path d="M0 330Q250 300 500 330T1000 320V450H0Z" fill="#f7fbff"/>';
+  s+='<path d="M0 420Q300 380 600 410T1000 400V450H0Z" fill="#cfe0f0"/>';
+  s+=tree(640,365,1.1);
+  s+=person(300,390,1.1,'#c0392b','#2c3e50','#f4f7fb','#e8b996')+person(380,400,1,'#2e86c1','#c0392b','#ffd27a','#d9a47f')+person(780,395,1.05,'#27ae60','#f4f7fb','#c0392b','#f0c8a8')+person(860,405,.95,'#8e44ad','#2c3e50','#7dff9a','#caa07f');
+  if(withChar){s+=person(500,415,1.35,'#34495e','#c0392b','#ffd27a','#e8b996');}
+  s+='<g stroke="#2a2a2a" stroke-width="2"><path d="M130 250L880 250" stroke-dasharray="0" opacity="0"/></g>';
+  var gar='';for(var j=0;j<14;j++){gar+='<circle class="tw" style="animation-delay:'+(j*.2)+'s" cx="'+(150+j*50)+'" cy="'+(232+Math.sin(j)*6)+'" r="5" fill="'+['#ff4d4d','#ffd27a','#6ad1ff','#7dff9a'][j%4]+'"/>';}
+  s+='<path d="M140 228Q500 280 860 228" stroke="#222" stroke-width="2" fill="none"/>'+gar;
+  return s;
+}
+document.getElementById('scene2').innerHTML=scene(false);
+document.getElementById('scene3').innerHTML=scene(true);
+document.querySelectorAll('.snow').forEach(function(el){
+  for(var i=0;i<45;i++){var f=document.createElement('i');f.style.left=Math.random()*100+'%';var z=2+Math.random()*5;f.style.width=f.style.height=z+'px';f.style.animationDuration=(5+Math.random()*7)+'s';f.style.animationDelay=(-Math.random()*10)+'s';el.appendChild(f);}
+});
+function show(id){document.querySelectorAll('.scr').forEach(function(e){e.classList.remove('on')});document.getElementById(id).classList.add('on');}
+setTimeout(function(){
+  show('s2');
+  var p=0,pb=document.getElementById('pb'),t=setInterval(function(){
+    p+=Math.random()*12;if(p>=100){p=100;clearInterval(t);setTimeout(function(){show('s3')},400);}
+    pb.style.width=p+'%';
+    if(p>55)document.getElementById('lt').textContent='Загрузка ресурсов…';
+  },300);
+},1800);
+document.getElementById('play').onclick=function(){var t=document.getElementById('toast');t.style.display='block';setTimeout(function(){t.style.display='none'},1800);};
+document.getElementById('sw').onclick=function(){var t=document.getElementById('toast');t.textContent='Выбор сервера скоро появится';t.style.display='block';setTimeout(function(){t.style.display='none'},1600);};
+})();
+</script>
+<script>
+/* ===== НАСТРОЙКИ ЛАУНЧЕРА: правь здесь ===== */
+var CONFIG={
+  servers:[
+    {name:"МОРОЗОВСК", url:"", online:"—"},
+    {name:"СНЕЖНОГОРСК", url:"", online:"—"},
+    {name:"ЛЕДОВАЯ", url:"", online:"—"}
+  ],
+  telegram:"https://t.me/",
+  vk:"https://vk.com/",
+  support:"https://t.me/"
+};
+/* url сервера = адрес твоей игры (веб-версия) или ссылка на APK. Пусто = кнопка «Играть» покажет подсказку. */
+(function(){
+var KEY='morozovka_v1',$=function(i){return document.getElementById(i)};
+var st;try{st=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!st||!st.chars)st={chars:[],cur:-1,server:0,uid:null,snow:true,showUid:true};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function uuid(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)})}
+if(!st.uid){st.uid=uuid();save();}
+function toast(t){var e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display='none'},2600)}
+function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
+function modal(html){$('box').innerHTML=html;$('modal').classList.add('on')}
+function close(){$('modal').classList.remove('on')}
+$('modal').onclick=function(e){if(e.target===this)close()};
+function render(){
+  var c=st.chars[st.cur];
+  $('nick').textContent=c?c.nick:'Создай персонажа';
+  $('lvl').textContent=c?c.level:'—';
+  $('fam').textContent=c?c.family:'—';
+  $('cash').textContent=c?fmt(c.cash)+' ₽':'—';
+  $('srvName').textContent='❄ '+CONFIG.servers[st.server].name;
+  $('uid').textContent=st.showUid?'UID: '+st.uid:'';
+  document.querySelectorAll('.snow').forEach(function(s){s.style.display=st.snow?'block':'none'});
+}
+function createChar(){
+  modal('<h4>Новый персонаж</h4><input type="text" id="in" placeholder="Имя_Фамилия" maxlength="24" autocomplete="off"><div class="err" id="er"></div><div class="row"><button id="no">Отмена</button><button class="ok" id="yes">Создать</button></div>');
+  $('no').onclick=close;
+  $('yes').onclick=function(){
+    var v=$('in').value.trim();
+    if(!/^[A-Za-z]+_[A-Za-z]+$/.test(v)){$('er').textContent='Формат: Имя_Фамилия, только латиница';return}
+    if(st.chars.some(function(x){return x.nick.toLowerCase()==v.toLowerCase()})){$('er').textContent='Такой ник уже есть';return}
+    if(st.chars.length>=3){$('er').textContent='Максимум 3 персонажа';return}
+    st.chars.push({nick:v,level:1,cash:5000,family:'—'});st.cur=st.chars.length-1;save();render();close();toast('Персонаж создан');
+  };
+}
+$('bCreate').onclick=createChar;
+$('nick').onclick=function(){
+  if(!st.chars.length){createChar();return}
+  var h='<h4>Выбор персонажа</h4>';
+  st.chars.forEach(function(c,i){h+='<div class="item'+(i==st.cur?' sel':'')+'" data-i="'+i+'"><span>'+c.nick+'<br><small>Уровень '+c.level+'</small></span><span data-d="'+i+'" style="font-size:20px">🗑</span></div>'});
+  h+='<div class="row"><button id="no">Закрыть</button></div>';modal(h);$('no').onclick=close;
+  document.querySelectorAll('.item').forEach(function(el){el.onclick=function(e){
+    var d=e.target.getAttribute('data-d');
+    if(d!==null){st.chars.splice(+d,1);st.cur=st.chars.length?0:-1;save();render();close();return}
+    st.cur=+el.getAttribute('data-i');save();render();close();}});
+};
+$('bLink').onclick=function(){
+  modal('<h4>Привязать аккаунт</h4><p style="margin:0 0 10px;font-size:14px;opacity:.85">Введи код привязки (минимум 6 символов), чтобы перенести UID на другое устройство.</p><input type="text" id="in" placeholder="Код" autocomplete="off"><div class="err" id="er"></div><div class="row"><button id="no">Отмена</button><button class="ok" id="yes">Привязать</button></div>');
+  $('no').onclick=close;
+  $('yes').onclick=function(){var v=$('in').value.trim();if(v.length<6){$('er').textContent='Код слишком короткий';return}
+    st.uid=v.length==36?v:st.uid;st.linked=v;save();render();close();toast('Аккаунт привязан')};
+};
+$('bSet').onclick=function(){
+  modal('<h4>Настройки</h4><div class="chk"><span>Снег</span><input type="checkbox" id="c1"'+(st.snow?' checked':'')+'></div><div class="chk"><span>Показывать UID</span><input type="checkbox" id="c2"'+(st.showUid?' checked':'')+'></div><div class="row"><button id="rs">Сбросить данные</button><button class="ok" id="yes">Готово</button></div>');
+  $('yes').onclick=function(){st.snow=$('c1').checked;st.showUid=$('c2').checked;save();render();close()};
+  $('rs').onclick=function(){if(confirm('Удалить всех персонажей и настройки?')){localStorage.removeItem(KEY);location.reload()}};
+};
+$('bOut').onclick=function(){if(st.cur<0){toast('Вы не вошли в персонажа');return}st.cur=-1;save();render();toast('Вы вышли из персонажа')};
+$('bTg').onclick=function(){window.open(CONFIG.telegram,'_blank')};
+$('bVk').onclick=function(){window.open(CONFIG.vk,'_blank')};
+$('bHelp').onclick=function(){window.open(CONFIG.support,'_blank')};
+$('sw').onclick=function(){
+  var h='<h4>Выбор сервера</h4>';
+  CONFIG.servers.forEach(function(s,i){h+='<div class="item'+(i==st.server?' sel':'')+'" data-s="'+i+'"><span>❄ '+s.name+'</span><small>онлайн: '+s.online+'</small></div>'});
+  h+='<div class="row"><button id="no">Закрыть</button></div>';modal(h);$('no').onclick=close;
+  document.querySelectorAll('[data-s]').forEach(function(el){el.onclick=function(){st.server=+el.getAttribute('data-s');save();render();close()}});
+};
+$('play').onclick=function(){
+  var c=st.chars[st.cur],sv=CONFIG.servers[st.server];
+  if(!c){toast('Сначала создай персонажа');return}
+  if(!sv.url){toast('Адрес игры не указан: впиши url сервера в CONFIG в index.html');return}
+  toast('Заходим на сервер '+sv.name+'…');
+  setTimeout(function(){location.href=sv.url+(sv.url.indexOf('?')<0?'?':'&')+'nick='+encodeURIComponent(c.nick)+'&uid='+encodeURIComponent(st.uid)},700);
+};
+render();
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')==0)navigator.serviceWorker.register('sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>
